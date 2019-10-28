@@ -28,8 +28,9 @@ apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software
 # 阿里云源
 curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
 add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
-apt-get -y update
+apt-get update
 apt-get -y install docker-ce docker-ce-cli containerd.io
+docker version
 
 echo '====add user vagrant to docker group===='
 egrep "^docker" /etc/group >& /dev/null
