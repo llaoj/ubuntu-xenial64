@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -vx
 
+echo '====set sshd===='
+sed -i "s/Port .*/Port 2222/g" /etc/ssh/sshd_config
+systemctl restart sshd
+
 echo '====set timezone===='
 timedatectl set-timezone Asia/Shanghai
 
