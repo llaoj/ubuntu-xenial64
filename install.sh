@@ -1,14 +1,27 @@
 #!/usr/bin/env bash
 set -vx
 
-echo '====set sshd===='
-sed -i "s/Port .*/Port 2222/g" /etc/ssh/sshd_config
-systemctl restart sshd
-
-echo '====set timezone===='
 timedatectl set-timezone Asia/Shanghai
 
-echo '====before install docker===='
+# ====change apt source list to aliyun====
+cp /etc/apt/sources.list /etc/apt/sources.list.bak
+cat > /etc/apt/sources.list<<EOF
+deb http://mirrors.aliyun.com/ubuntu/ xenial main
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial main
+deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main
+deb http://mirrors.aliyun.com/ubuntu/ xenial universe
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial universe
+deb http://mirrors.aliyun.com/ubuntu/ xenial-updates universe
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates universe
+deb http://mirrors.aliyun.com/ubuntu/ xenial-security main
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main
+deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security universe
+EOF
+apt-get update
+
+# ====before install docker====
 cat > /etc/modules-load.d/containerd.conf <<EOF
 overlay
 br_netfilter
@@ -23,7 +36,7 @@ net.bridge.bridge-nf-call-ip6tables = 1
 EOF
 sysctl --system
 
-echo '====install docker===='
+# ====install docker====
 apt-get update
 apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 # 官方源
@@ -36,7 +49,7 @@ apt-get update
 apt-get -y install docker-ce docker-ce-cli containerd.io
 docker version
 
-echo '====add user vagrant to docker group===='
+# ====add user vagrant to docker group====
 egrep "^docker" /etc/group >& /dev/null
 if [ $? -ne 0 ]
 then
@@ -44,7 +57,7 @@ then
 fi
 usermod -aG docker vagrant
 
-echo "====set daocloud's registry mirror===="
+# ====set daocloud's registry mirror====
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
