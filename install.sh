@@ -71,7 +71,3 @@ cat > /etc/docker/daemon.json <<EOF
 EOF
 systemctl daemon-reload
 systemctl restart docker
-
-cat >> /etc/hosts <<EOF
-127.0.0.1 main.mysite.test
-EOF
