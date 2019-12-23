@@ -35,6 +35,8 @@ net.ipv4.ip_forward = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 EOF
 sysctl --system
+swapoff -a
+sed -i '/swap/s/^/#/' /etc/fstab
 
 # ====install docker====
 apt-get update
@@ -71,3 +73,4 @@ cat > /etc/docker/daemon.json <<EOF
 EOF
 systemctl daemon-reload
 systemctl restart docker
+systemctl enable docker
