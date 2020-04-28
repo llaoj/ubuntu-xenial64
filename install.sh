@@ -19,7 +19,14 @@ deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main
 deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe
 deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security universe
 EOF
+
+add-apt-repository ppa:ubuntu-desktop/ubuntu-make
 apt-get update
+apt-get install -y dos2unix \
+                   ubuntu-make \
+                   autoconf \
+                   automake \
+                   libtool
 
 # ====before install docker====
 cat > /etc/modules-load.d/containerd.conf <<EOF
@@ -39,8 +46,11 @@ swapoff -a
 sed -i '/swap/s/^/#/' /etc/fstab
 
 # ====install docker====
-apt-get update
-apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+apt-get install -y apt-transport-https \
+                   ca-certificates \
+                   curl \
+                   gnupg-agent \
+                   software-properties-common
 # 官方源
 # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 # add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
