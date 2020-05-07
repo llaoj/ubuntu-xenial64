@@ -3,9 +3,9 @@ set -vx
 
 timedatectl set-timezone Asia/Shanghai
 
-# ====安装必要软件====
+# ====替换源====
+sed -ri "s/(archive|security).ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list 
 apt-get update 
-apt-get install -y dos2unix curl make autoconf automake libtool
 
 # ====before install docker====
 cat > /etc/modules-load.d/containerd.conf <<EOF
@@ -25,7 +25,7 @@ swapoff -a
 sed -i '/swap/s/^/#/' /etc/fstab
 
 # ====install docker====
-apt-get install -y apt-transport-https ca-certificates gnupg-agent software-properties-common
+apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 # 官方源
 # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 # add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
