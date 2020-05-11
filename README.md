@@ -1,2 +1,3 @@
 # ubuntu-xenial64
-my dev env
+
+A docker env for dev powered by ubuntu xenial, enjoy it~
